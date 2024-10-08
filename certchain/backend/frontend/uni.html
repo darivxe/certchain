@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Certificates | CertChain</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="dashboard">
+        <div class="certchain-logo">
+            <img src="certchain-logo.png" alt="CertChain Logo">
+            <h1><a href="index.html">CERTCHAIN</a></h1>
+        </div>
+        <div class="profile-section">
+            <div class="profile-menu">
+                <a href="#">Profile</a>
+                <a href="#">Logout</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="upload-container">
+        <h2>Upload Certificates</h2>
+        <div class="upload-box">
+            <div class="upload-area">
+                <p>Drag and Drop Your file here!</p>
+            </div>
+            <form>
+                <input type="file" id="certificate-file" name="certificate-file" required>
+                <input type="text" placeholder="Student Name">
+                <input type="text" placeholder="Course Details">
+                <input type="text" placeholder="Student ID">
+                <input type="text" placeholder="Certificate ID">
+                <button class="validate-btn">Validate</button>
+                <button class="finalize-btn">Finalize</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

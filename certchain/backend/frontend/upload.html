@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Certificates</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Upload Certificates</h1>
+    <form id="upload-form">
+        <label for="certificate-file">Select Certificate File:</label>
+        <input type="file" id="certificate-file" name="certificate-file" required>
+        <button type="submit">Upload</button>
+    </form>
+
+    <script>
+        document.getElementById('upload-form').addEventListener('submit', async (e) => {
+            e.preventDefault(); // Prevent the default form submission
+
+            const formData = new FormData();
+            const fileInput = document.getElementById('certificate-file');
+            formData.append('certificate', fileInput.files[0]);
+
+            const response = await fetch('http://localhost:5000/api/certificates/upload', { 
+                method: 'POST',
+                body: formData,
+            });
+
+            const data = await response.json();
+            alert(data.message);
+        });
+    </script>
+</body>
+</html>

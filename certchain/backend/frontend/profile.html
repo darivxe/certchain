@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Certificates</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="certchain-logo.png" alt="Certchain Logo" class="logo">
+            <h1>CERTCHAIN</h1>
+        </div>
+        <nav class="navbar">
+            <ul>
+                <li><a href="#" id="logout-button">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="profile-container">
+        <h2>Welcome, <span id="profile-email">[Student Name]</span></h2>
+        <input type="text" id="search-certificates" placeholder="Search certificates...">
+        <table id="certificates-table">
+            <thead>
+                <tr>
+                    <th>Certificate Name</th>
+                    <th>Issue Date</th>
+                    <th>Download</th>
+                    <th>View</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        <button class="add-certificate-button">Add Certificate</button>
+    </div>
+    
+    <script src="app.js"></script>
+    <script>
+        // Function to load user profile and certificates
+        async function loadUserProfile() {
+            const token = localStorage.getItem('token');
+
+            if (!token) {
+                alert('You are not logged in. Redirecting to login page...');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const response = await fetch('http://localhost:5000/api/users/me', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            const data = await response.json();
+            if (data.email) { // Ensure you check for a successful response
+                document.getElementById('profile-email').innerText = data.email;
+                loadCertificates(); // Load certificates after user info
+            } else {
+                alert('Failed to load profile.');
+            }
+        }
+
+        // Function to load user's certificates (make sure you implement this on the server side)
+        async function loadCertificates() {
+            const token = localStorage.getItem('token');
+            const response = await fetch('http://localhost:5000/api/certificates/user-certificates', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
+
+            const certificates = await response.json();
+            const tableBody = document.getElementById('certificates-table').querySelector('tbody');
+
+            // Clear the table body before inserting new rows
+            tableBody.innerHTML = '';
+
+            certificates.forEach(cert => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${cert.name}</td>
+                    <td>${new Date(cert.issueDate).toLocaleDateString()}</td>
+                    <td><a href="${cert.downloadLink}">&#x2B07;</a></td>
+                    <td><a href="${cert.viewLink}">&#x1F441;</a></td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Logout functionality
+        document.getElementById('logout-button').addEventListener('click', () => {
+            localStorage.removeItem('token');
+            alert('Logged out successfully.');
+            window.location.href = 'login.html'; // Redirect to login page after logout
+        });
+
+        // Call this function when the profile page loads
+        if (window.location.pathname.endsWith('profile.html')) {
+            loadUserProfile();
+        }
+    </script>
+</body>
+</html>
